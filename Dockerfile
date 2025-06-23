@@ -5,7 +5,7 @@ FROM node:latest
 WORKDIR /docsify-project
 
 # 将项目的文件复制到容器中
-COPY docs ./
+COPY . .
 
 # 安装 docsify-cli
 RUN npm install -g docsify-cli@latest
