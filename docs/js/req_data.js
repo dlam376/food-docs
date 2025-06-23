@@ -1,9 +1,13 @@
 async function renderDatabaseContent(tableName) {
   try {
+    const cacheContent = localStorage.getItem(tableName);
+    if (cacheContent) {
+      return cacheContent;
+    }
     const reqData = {
       tableName: tableName,
     };
-    const res = await fetch("http://localhost:8456/dynamic/search", {
+    const res = await fetch("https://ycobfudfzkft.ap-northeast-1.clawcloudrun.com/dynamic/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -13,6 +17,12 @@ async function renderDatabaseContent(tableName) {
     });
     const resJson = await res.json();
     const resData = resJson.data
+    // 对存在换行符 \n 的地方进行换行
+    resData.forEach(item => {
+      if (item.content.includes('\\n')) {
+        item.content = item.content.replace(/\\n/g, '  \n')
+      }
+    })
     // const resData = [
     //   { level1: "概述", content: "总览内容..." }, // 只有level1
     //   {
@@ -32,6 +42,7 @@ async function renderDatabaseContent(tableName) {
 
     // 生成Markdown格式内容
     const markdownContent = generateMarkdown(groupedData);
+    localStorage.setItem(tableName, markdownContent);
     return markdownContent;
   } catch (error) {
     return `❌ 加载失败: ${error.message}`;

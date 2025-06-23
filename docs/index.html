@@ -41,24 +41,25 @@
           language: "chinese",
         },
         plugins: [
-          // function (hook, vm) {
-          //   hook.beforeEach(function (content, next) {
-          //     // 判断当前是 food.md
-          //     if (vm.route.file === "food/food_recipe.md" || vm.route.file === "food/food_desc.md") {
-          //       // 获取 vm.route.file值中/到.md中间的字符串
-          //       let filePath = vm.route.file.split("/");
-          //       let fileName = filePath[filePath.length - 1].split(".")[0];
-          //       renderDatabaseContent(fileName).then((markdown) => {
-          //         next(markdown); // 替换原始内容
-          //       });
-          //     } else {
-          //       next(content); // 否则不处理
-          //     }
-          //   });
-          //   hook.doneEach(function () {
-          //     generateSidebar();
-          //   });
-          // },
+          function (hook, vm) {
+
+            hook.beforeEach(function (content, next) {
+              // 判断当前是 food.md
+              if (vm.route.file === "food/food_recipe.md" || vm.route.file === "food/food_desc.md") {
+                // 获取 vm.route.file值中/到.md中间的字符串
+                let filePath = vm.route.file.split("/");
+                let fileName = filePath[filePath.length - 1].split(".")[0];
+                renderDatabaseContent(fileName).then((markdown) => {
+                  next(markdown); // 替换原始内容
+                });
+              } else {
+                next(content); // 否则不处理
+              }
+            });
+            hook.doneEach(function () {
+              generateSidebar();
+            });
+          },
         ],
       };
     </script>
@@ -82,15 +83,9 @@
     <script>
       window.$docsify.plugins.push(
         EditOnGithubPlugin.create(
-          "https://github.com/docsifyjs/docsify/blob/master/docs/",
+          "https://github.com/dlam376/food-docs/blob/main/docs/",
           null,
-          function (file) {
-            if (file.indexOf("en") === -1) {
-              return "编辑";
-            } else {
-              return "edit on git";
-            }
-          },
+          null,
         )
       );
     </script>
