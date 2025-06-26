@@ -29,9 +29,15 @@
     win.EditOnGithubPlugin.refresh = function (event, vm) {
       let filePath = vm.route.file.split("/");
       let fileName = filePath[filePath.length - 1].split(".")[0];
-      localStorage.removeItem(fileName)
+      localStorage.removeItem(fileName);
       event.preventDefault();
       window.location.reload();
+    };
+    win.EditOnGithubPlugin.add = function (event, vm) {
+      let filePath = vm.route.file.split("/");
+      let fileName = filePath[filePath.length - 1].split(".")[0];
+      event.preventDefault(); // 阻止链接默认行为
+      showFormModal(fileName);
     };
     function generateHeader(title) {
       return (header = [
@@ -44,6 +50,11 @@
         'onclick="EditOnGithubPlugin.refreshPage(event)">',
         "刷新",
         "</a></p>",
+        '<p class="add_form" style="float: left; margin-left: 10px;"><a style="text-decoration: underline; cursor: pointer"',
+        'onclick="EditOnGithubPlugin.addForm(event)">',
+        "添加",
+        "</a></p>",
+
         "</div>",
       ].join(""));
     }
@@ -55,6 +66,10 @@
 
       win.EditOnGithubPlugin.refreshPage = function (event) {
         EditOnGithubPlugin.refresh(event, vm);
+      };
+
+      win.EditOnGithubPlugin.addForm = function (event) {
+        EditOnGithubPlugin.add(event, vm);
       };
 
       if (isFunction(title)) {

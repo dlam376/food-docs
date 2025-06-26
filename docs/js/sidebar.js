@@ -44,9 +44,27 @@ function generateSidebar() {
     showChildren(e);
   });
 
+  // 绑定标题点击事件
+  $(".sidebar-nav li a").on("click", function(e) {
+    // 只有当点击的是有子菜单的标题时才处理
+    if ($(this).parent().hasClass("sidebar-nav-parent-li")) {
+      // 先处理展开/折叠
+      var fakeEvent = {
+        target: $(this).parent().find(".ul-after-sanjiao")[0],
+        stopPropagation: function() {},
+        preventDefault: function() {}
+      };
+      showChildren(fakeEvent);
+      
+      // 然后允许默认的链接跳转行为
+      // 不需要阻止事件或阻止默认行为
+    }
+    // 如果没有子菜单，让链接正常跳转
+  });
+
+
   // 展开
   function showChildren(e) {
-    console.log("object");
     e.stopPropagation();
     e.preventDefault();
     var el = e.target.parentNode.parentNode.nextSibling;
